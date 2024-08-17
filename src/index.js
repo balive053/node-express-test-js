@@ -10,14 +10,28 @@ app.listen(PORT, () => {
 })
 
 const mockUsers = [
-    {"id":1, "name":'Bob'},
-    {"id":2, "name":'Charlotte'},
-    {"id":3, "name":'William'}
+    {"id":1, "username":'Bob'},
+    {"id":2, "username":'Charlotte'},
+    {"id":3, "username":'William'},
+    {"id":4, "username":'Jack'},
+    {"id":5, "username":'Elise'}
 ]
 
 app.get('/api/users', (request, response) => {
     console.log(mockUsers);
-    response.send(mockUsers)
+    console.log(request.query);
+
+    // takes the key words 'filter' and 'value' from input query
+    const {
+        query: {filter, value},
+    } = request;
+
+    if (!filter && !value)
+        return mockUsers;
+    if (filter && value) {
+        const filteredReturn = mockUsers.filter((user) => user[filter].toLowerCase().includes(value.toLowerCase()));
+        return response.send(filteredReturn);
+    }
 })
 
 //get route params as input
