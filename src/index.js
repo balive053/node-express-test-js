@@ -4,6 +4,9 @@ import express, { response } from 'express';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// middle ware to parse input
+app.use(express.json())
+
 
 app.listen(PORT, () => {
     console.log(`Running on port: ${PORT}`)
@@ -25,13 +28,16 @@ app.get('/api/users', (request, response) => {
     const {
         query: {filter, value},
     } = request;
+    console.log(request.query);
 
     if (!filter && !value)
-        return mockUsers;
-    if (filter && value) {
+        return response.send(mockUsers);
+    else if (filter && value) {
         const filteredReturn = mockUsers.filter((user) => user[filter].toLowerCase().includes(value.toLowerCase()));
         return response.send(filteredReturn);
     }
+    else return response.send("To return specific result, parameters 'filter' and 'value' must be passed")
+
 })
 
 //get route params as input
@@ -47,4 +53,12 @@ app.get('/api/users/:id', (request, responce) => {
         return responce.sendStatus(404)
     else
         return responce.send(userResponse)
+})
+
+app.post('/api/users', (request, responce) => {
+    console.log(request.body);
+    //return responce.send(200);
+    const newUser = {"id":900, "username":'TJ'}
+    mockUsers.push(newUser)
+    return responce.status(201).send(mockUsers)
 })
