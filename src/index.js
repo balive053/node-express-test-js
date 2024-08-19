@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express, { request, response } from 'express';
 
 
 const app = express();
@@ -61,4 +61,14 @@ app.post('/api/users', (request, responce) => {
     const newUser = {"id":900, "username":'TJ'}
     mockUsers.push(newUser)
     return responce.status(201).send(mockUsers)
+})
+
+app.put('/api/users:id', (request, response) => {
+    const {body, params={id},} = request;
+    
+    // attempt to parse id as int to check validity
+    const parsedId = parseInt(id);
+    if (isNaN(parsedId)) return response.status(400)
+
+    const userIndex = mockUsers.findIndex()
 })
